@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Supported Agriculture</title>
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --secondary: #8BC34A;
+            --light: #F1F8E9;
+            --dark: #2E7D32;
+            --text: #333;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: var(--text);
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            padding: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+        
+        .hero {
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('Mbustbackground.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 4rem 1rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Farmer Upload Form */
+        .upload-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        
+        button {
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--dark);
+        }
+        
+        /* Products Grid */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-image {
+            height: 150px;
+            background-color: #eee;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .product-info {
+            padding: 1rem;
+        }
+        
+        .product-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-price {
+            color: var(--dark);
+            font-weight: bold;
+        }
+        
+        .product-quantity {
+            color: #666;
+        }
+        
+        .certification {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            background-color: var(--light);
+            color: var(--dark);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            padding: 0.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* Cart Section */
+        .cart {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+        
+        .cart-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+        
+        .cart-items th, .cart-items td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .cart-total {
+            text-align: right;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .checkout-btn {
+            float: right;
+            margin-top: 1rem;
+        }
+        
+        /* Gallery Styles */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .gallery-item .caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 1rem;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover .caption {
+            transform: translateY(0);
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="C:\Users\User\Desktop\MBUSTWork\Mbustlogo.jpg" alt="Organic Logo">
+            <span>Community Supported Agriculture</span>
+        </div>
+        <nav>
+            <a href="#" class="nav-link active" data-tab="home">Home</a>
+            <a href="#" class="nav-link" data-tab="farmer">Farmer</a>
+            <a href="#" class="nav-link" data-tab="consumer">Consumer</a>
+            <a href="#" class="nav-link" data-tab="certification">Certification</a>
+            <a href="#" class="nav-link" data-tab="gallery">Gallery</a>
+            <a href="#" class="nav-link" data-tab="login">Login</a>
+        </nav>
+    </header>
+    
+    <!-- Home Tab -->
+    <section id="home" class="tab-content active">
+        <div class="hero">
+            <h1>Fresh Organic Vegetables Direct from Chitlang Farmers</h1>
+            <p>No middlemen. Fair prices. Lab-tested quality.</p>
+            <div class="cta-buttons">
+                <button class="btn" data-tab="farmer">I'm a Farmer</button>
+                <button class="btn" data-tab="consumer">I'm a Consumer</button>
+            </div>
+        </div>
+        
+        <div class="container">
+            <h2>About Our Initiative</h2>
+            <p>1. Background <br><br>
+Community Supported Agriculture (CSA) is a farming system driven by the community, for the community, focusing on production and consumption. In CSA, a committed group of individuals supports community farming activities by producing and facilitating the consumption of high-quality food products. Under this system, a group of producers directly sells and distributes quality food products to consumers. In some models, consumers make advance payments for expected production costs, making it easier for producers to purchase necessary inputs. Additionally, both consumers and producers share the risks of production, fostering a stronger mutual relationship.
+
+CSA requires one or more groups of producers and consumers. CSA producers agree to supply products (vegetables, fruits, meat, milk, etc.) to consumers who purchase shares. Besides providing marketing convenience, CSA also serves as an important community-building component.
+<br><br>
+i. Rationale of Organic CSA<br><br>
+There are two major challenges in organic farming promotion—production-related issues and market-related issues. CSA opens pathways to address production challenges while eliminating middlemen, ensuring that profits directly reach producers and consumers, thereby solving market-related issues. Since CSA has the potential to resolve both challenges, this model is being proposed for promoting organic farming in Chitlang.
+<br><br>
+ii. Benefits of CSA<br><br>
+Benefits for Producers:
+
+Access to pre-production financial resources.
+
+Guaranteed market for produce.
+
+Higher potential profits due to the absence of middlemen.
+
+Reduced investment costs due to minimal use of chemical fertilizers and pesticides.
+
+Consumers may adjust to slight variations in supply quantities.
+
+Risk-sharing provisions with consumers.<br><br>
+
+Benefits for Consumers:<br><br>
+
+Access to fresh and healthy organic vegetables.
+
+Awareness of local production sources and methods, ensuring safe consumption.
+
+Contribution to sustainable environmental improvement.
+
+Greater partnership and ownership in production risks and benefits.
+
+Fixed-price guarantee for the entire season.
+
+Affordable access to premium organic produce.<br><br>
+
+Benefits for Chitlang:<br><br>
+
+Promotion of organic farming and eco-tourism.
+
+Improvement in sustainable environmental practices.
+
+Economic and livelihood enhancement.</p>
+        </div>
+    </section>
+    
+    <!-- Farmer Tab -->
+    <section id="farmer" class="tab-content">
+        <div class="container">
+            <h1>Farmer Dashboard</h1>
+            <p>Upload your organic vegetables to sell directly to consumers</p>
+            
+            <div class="upload-form">
+                <h2>Add New Produce</h2>
+                <form id="produce-form">
+                    <div class="form-group">
+                        <label for="vegetable-name">Vegetable Name</label>
+                        <select id="vegetable-name" required>
+                            <option value="">Select Vegetable</option>
+                            <option value="काउली स्थानिय">काउली स्थानिय</option>
+                            <option value="मूला सेतो(लोकल)">मूला सेतो(लोकल)</option>
+                            <option value="बकूला">बकूला</option>
+                            <option value="गाजर(लोकल)">गाजर(लोकल)</option>
+                            <option value="हरियो धनिया">हरियो धनिया</option>
+                            <option value="मटरकोशा">मटरकोशा</option>
+                            <option value="राजा च्याउ">राजा च्याउ</option>
+                            <option value="गुन्दुक">गुन्दुक</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quantity">Quantity Available (kg)</label>
+                        <input type="number" id="quantity" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="price">Price per kg (NPR)</label>
+                        <input type="number" id="price" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Certification</label>
+                        <div>
+                            <input type="radio" id="organic" name="certification" value="Organic" checked>
+                            <label for="organic" style="display: inline;">Organic</label>
+                            
+                            <input type="radio" id="safe" name="certification" value="Safe">
+                            <label for="safe" style="display: inline;">Safe Food</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="harvest-date">Harvest Date</label>
+                        <input type="date" id="harvest-date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes">Notes (Optional)</label>
+                        <textarea id="notes" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit">Upload Produce</button>
+                </form>
+            </div>
+            
+            <div id="farmer-produce-list">
+                <h2>Your Current Listings</h2>
+                <div class="products" id="farmer-products">
+                    <!-- Farmer's products will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Consumer Tab -->
+    <section id="consumer" class="tab-content">
+        <div class="container">
+            <h1>Organic Marketplace</h1>
+            <p>Buy fresh organic vegetables directly from Chitlang farmers</p>
+            
+            <div class="products" id="consumer-products">
+                <!-- Products will be loaded here by JavaScript -->
+            </div>
+            
+            <div class="cart">
+                <h2>Your Cart</h2>
+                <table class="cart-items" id="cart-items">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Cart items will be added here -->
+                    </tbody>
+                </table>
+                
+                <div class="cart-total">
+                    Total: <span id="cart-total">0</span> NPR
+                </div>
+                
+                <button class="checkout-btn" id="checkout-btn">Proceed to Checkout</button>
+                <div style="clear: both;"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Certification Tab -->
+    <section id="certification" class="tab-content">
+        <div class="container">
+            <h1>Organic Certification</h1>
+            <p>All our farmers' produce is tested by Madan Bhandari University labs</p>
+            
+            <div style="background: white; padding: 2rem; border-radius: 8px; margin-top: 2rem;">
+                <h2>Our Certification Process</h2>
+                <p>We conduct rigorous testing to ensure:</p>
+                <ul>
+                    <li>No harmful pesticides</li>
+                    <li>Safe chemical levels</li>
+                    <li>Authentic organic farming practices</li>
+                </ul>
+                
+                <h3>Current Certified Farmers</h3>
+                <ul id="certified-farmers">
+                    <li>Shyam Farms, Chitlang</li>
+                    <li>Pursottam Organic Garden, Chitlang</li>
+                    <li>Sudeep Fresh Produce, Chitlang</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Gallery Tab -->
+    <section id="gallery" class="tab-content">
+        <div class="container">
+            <h1>Our Organic Farm Gallery</h1>
+            <p>See the journey of your food from farm to table</p>
+            
+            <div class="gallery-grid">
+                <!-- Image 1 -->
+                <div class="gallery-item">
+                    <img src="images/F1.jpg" alt="Organic farming in Chitlang">
+                    <div class="caption">Farmers harvesting fresh vegetables</div>
+                </div>
+                
+                <!-- Image 2 -->
+                <div class="gallery-item">
+                    <img src="images/F2.jpg" alt="Organic certification process">
+                    <div class="caption">University lab testing for organic certification</div>
+                </div>
+                
+                <!-- Image 3 -->
+                <div class="gallery-item">
+                    <img src="images/F3.jpg" alt="Fresh produce">
+                    <div class="caption">Freshly harvested organic vegetables</div>
+                </div>
+                
+                <!-- Image 4 -->
+                <div class="gallery-item">
+                    <img src="images/F5.jpg" alt="Farm to market">
+                    <div class="caption">Direct delivery to consumers</div>
+                </div>
+                
+                <!-- Image 5 -->
+                <div class="gallery-item">
+                    <img src="images/F5.jpg" alt="Happy farmers">
+                    <div class="caption">Our farmers receiving fair prices</div>
+                </div>
+                
+                <!-- Image 6 -->
+                <div class="gallery-item">
+                    <img src="images/F6.jpg" alt="Community">
+                    <div class="caption">Community supported agriculture</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Login Tab -->
+    <section id="login" class="tab-content">
+        <div class="container">
+            <div style="max-width: 400px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px;">
+                <h1>Login</h1>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password">
+                </div>
+                
+                <button style="width: 100%;">Login</button>
+                
+                <p style="text-align: center; margin-top: 1rem;">
+                    Don't have an account? <a href="#" style="color: var(--primary);">Register here</a>
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>An initiative by Madan Bhandari University</p>
+        <p>Contact: info@mbu.edu.np | Phone: 98********</p>
+    </footer>
+
+    <script>
+        const products = [
+            {
+                id: 1,
+                name: "काउली स्थानिय",
+                price: 25,
+                quantity: 150,
+                certification: "Safe",
+                image: "images/Cauli.jpg"
+            },
+            {
+                id: 2,
+                name: "मूला सेतो(लोकल)",
+                price: 21,
+                quantity: 35,
+                certification: "Organic",
+                image: "images/Mula.jpg"
+            },
+            {
+                id: 3,
+                name: "बकूला",
+                price: 54,
+                quantity: 20,
+                certification: "Organic",
+                image: "images/bakulla.jpg"
+            },
+            {
+                id: 4,
+                name: "गाजर(लोकल)",
+                price: 33,
+                quantity: 10,
+                certification: "Organic",
+                image: "images/Gajar.jpg"
+            },
+            {
+                id: 5,
+                name: "हरियो धनिया",
+                price: 192,
+                quantity: 2,
+                certification: "Organic",
+                image: "images/Dhaniya.jpg"
+            },
+            {
+                id: 6,
+                name: "मटरकोशा",
+                price: 90,
+                quantity: 15,
+                certification: "Organic",
+                image: "images/Motor.jpg"
+            },
+            {
+                id: 7,
+                name: "राजा च्याउ",
+                price: 290,
+                quantity: 50,
+                certification: "Safe",
+                image: "images/Raja.jpg"
+            },
+            {
+                id: 8,
+                name: "गुन्दुक",
+                price: 392,
+                quantity: 2,
+                certification: "Organic",
+                image: "images/Gundruk.jpg"
+            }
+        ];
+        
+        // Farmer's products
+        const farmerProducts = [];
+        
+        // Cart items
+        let cart = [];
+        
+        // DOM Elements
+        const navLinks = document.querySelectorAll('.nav-link');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const produceForm = document.getElementById('produce-form');
+        const farmerProductsContainer = document.getElementById('farmer-products');
+        const consumerProductsContainer = document.getElementById('consumer-products');
+        const cartItemsContainer = document.getElementById('cart-items').querySelector('tbody');
+        const cartTotalElement = document.getElementById('cart-total');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load products for consumer view
+            renderProducts();
+            
+            // Set up tab switching
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding content
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Set up buttons that switch tabs
+            document.querySelectorAll('[data-tab]').forEach(btn => {
+                if (btn.classList.contains('nav-link')) return;
+                
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    document.querySelector(`.nav-link[data-tab="${tabId}"]`).classList.add('active');
+                    
+                    // Show corresponding content
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Handle produce form submission
+            produceForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const newProduct = {
+                    id: Date.now(),
+                    name: document.getElementById('vegetable-name').value,
+                    quantity: document.getElementById('quantity').value,
+                    price: document.getElementById('price').value,
+                    certification: document.querySelector('input[name="certification"]:checked').value,
+                    harvestDate: document.getElementById('harvest-date').value,
+                    notes: document.getElementById('notes').value,
+                    image: getDefaultImage(document.getElementById('vegetable-name').value)
+                };
+                
+                farmerProducts.push(newProduct);
+                renderFarmerProducts();
+                produceForm.reset();
+                alert('Your produce has been added successfully!');
+            });
+            
+            // Handle checkout
+            checkoutBtn.addEventListener('click', function() {
+                if (cart.length === 0) {
+                    alert('Your cart is empty!');
+                    return;
+                }
+                
+                alert(`Order placed successfully! Total: ${calculateCartTotal()} NPR`);
+                cart = [];
+                renderCart();
+            });
+        });
+        
+        // Render products for consumers
+        function renderProducts() {
+            consumerProductsContainer.innerHTML = '';
+            
+            products.forEach(product => {
+                if (product.quantity <= 0) return;
+                
+                const productElement = document.createElement('div');
+                productElement.className = 'product-card';
+                productElement.innerHTML = `
+                    <div class="product-image" style="background-image: url('${product.image}')"></div>
+                    <div class="product-info">
+                        <div class="product-title">${product.name}</div>
+                        <div class="product-meta">
+                            <span class="product-price">${product.price} NPR/kg</span>
+                            <span class="product-quantity">${product.quantity} kg available</span>
+                        </div>
+                        <span class="certification">${product.certification}</span>
+                        <button class="add-to-cart" data-id="${product.id}">Add to Cart</button>
+                    </div>
+                `;
+                
+                consumerProductsContainer.appendChild(productElement);
+            });
+            
+            // Set up add to cart buttons
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    const product = products.find(p => p.id === productId);
+                    
+                    if (product) {
+                        addToCart(product);
+                    }
+                });
+            });
+        }
+        
+        // Render farmer's products
+        function renderFarmerProducts() {
+            farmerProductsContainer.innerHTML = '';
+            
+            if (farmerProducts.length === 0) {
+                farmerProductsContainer.innerHTML = '<p>You have not added any produce yet.</p>';
+                return;
+            }
+            
+            farmerProducts.forEach(product => {
+                const productElement = document.createElement('div');
+                productElement.className = 'product-card';
+                productElement.innerHTML = `
+                    <div class="product-image" style="background-image: url('${product.image}')"></div>
+                    <div class="product-info">
+                        <div class="product-title">${product.name}</div>
+                        <div class="product-meta">
+                            <span class="product-price">${product.price} NPR/kg</span>
+                            <span class="product-quantity">${product.quantity} kg</span>
+                        </div>
+                        <span class="certification">${product.certification}</span>
+                        <p><small>Harvested: ${product.harvestDate}</small></p>
+                    </div>
+                `;
+                
+                farmerProductsContainer.appendChild(productElement);
+            });
+        }
+        
+        // Add product to cart
+        function addToCart(product) {
+            const existingItem = cart.find(item => item.id === product.id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1
+                });
+            }
+            
+            renderCart();
+        }
+        
+        // Render cart
+        function renderCart() {
+            cartItemsContainer.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<tr><td colspan="5">Your cart is empty</td></tr>';
+                cartTotalElement.textContent = '0';
+                return;
+            }
+            
+            cart.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.price} NPR</td>
+                    <td>${item.quantity}</td>
+                    <td>${item.price * item.quantity} NPR</td>
+                    <td><button class="remove-item" data-id="${item.id}">Remove</button></td>
+                `;
+                cartItemsContainer.appendChild(row);
+            });
+            
+            // Set up remove buttons
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    removeFromCart(productId);
+                });
+            });
+            
+            cartTotalElement.textContent = calculateCartTotal();
+        }
+        
+        // Remove item from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            renderCart();
+        }
+        
+        // Calculate cart total
+        function calculateCartTotal() {
+            return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+        }
+        
+        // Get default image based on vegetable name
+        function getDefaultImage(name) {
+            const vegImages = {
+                "काउली स्थानिय": "images/Cauli.jpg",
+                "मूला सेतो(लोकल)": "images/Mula.jpg",
+                "बकूला": "images/bakulla.jpg",
+                "गाजर(लोकल)": "images/Gajar.jpg",
+                "हरियो धनिया": "images/Dhaniya.jpg",
+                "मटरकोशा": "images/Motor.jpg",
+                "राजा च्याउ": "images/Raja.jpg",
+                "गुन्दुक": "images/Gundruk.jpg"
+            };
+            
+            return vegImages[name] || "images/default-vegetable.jpg";
+        }
+    </script>
+</body>
+</html>
